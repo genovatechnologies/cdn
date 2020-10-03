@@ -54,17 +54,44 @@ var KTLogin = function() {
 
             validation.validate().then(function(status) {
 		        if (status == 'Valid') {
-                    swal.fire({
-		                text: "All is cool! Now you submit this form",
-		                icon: "success",
-		                buttonsStyling: false,
-		                confirmButtonText: "Ok, got it!",
-                        customClass: {
-    						confirmButton: "btn font-weight-bold btn-light-primary"
-    					}
-		            }).then(function() {
-						KTUtil.scrollTop();
-					});
+                    var a = $(this),
+                        l = $(this).closest("form"),
+                        action = $(this).attr("action");
+                    l.ajaxSubmit({
+                        url: action,
+                        success: function(e, t, r, s) {
+                            var obj = $.parseJSON(e);
+                            if(obj.status==1){
+                                a.removeClass("m-loader m-loader--right m-loader--light").attr("disabled", !1), i(l, "success", "You Are Successfully Logged In.");
+                                toastr["success"]("You Are Successfully Logged In.", "Logged In");
+                                window.open('<?php echo base_url()?>dashboard', '_self');
+                            }else if(obj.status==2){
+                                a.removeClass("m-loader m-loader--right m-loader--light").attr("disabled", !1), i(l, "danger", "Your Account Has been Suspended!!.");
+                                toastr["error"]("Your Account Has been Suspended!!.", "Account Suspended");
+                            }else if(obj.status==0){
+                                a.removeClass("m-loader m-loader--right m-loader--light").attr("disabled", !1), i(l, "warning", "You Have No Access to This Area!!.");
+                                toastr["error"]("Incorrect username or password. Please try again.", "Incorrect Data");
+                            }else{
+                                a.removeClass("m-loader m-loader--right m-loader--light").attr("disabled", !1), i(l, "danger", "Incorrect username or password. Please try again.");
+                                toastr["error"]("Sorry. There Has Been Some Error Occurred. Please Try Again.", "Error");
+                            }
+                            setTimeout(function() {
+                                a.removeClass("m-loader m-loader--right m-loader--light").attr("disabled", !1), i(l, "danger", "Incorrect username or password. Please try again.")
+                                toastr["warning"]("Your Attempt is Timed Out. Please Try Again.", "Timed Out");
+                            }, 2e4)
+                        }
+                    })
+     //                swal.fire({
+		   //              text: "All is cool! Now you submit this form",
+		   //              icon: "success",
+		   //              buttonsStyling: false,
+		   //              confirmButtonText: "Ok, got it!",
+     //                    customClass: {
+    	// 					confirmButton: "btn font-weight-bold btn-light-primary"
+    	// 				}
+		   //          }).then(function() {
+					// 	KTUtil.scrollTop();
+					// });
 				} else {
 					swal.fire({
 		                text: "Sorry, looks like there are some errors detected, please try again.",
