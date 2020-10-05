@@ -54,9 +54,11 @@ var KTLogin = function() {
 
             validation.validate().then(function(status) {
 		        if (status == 'Valid') {
+                    alert(1);
                     var a = $(this),
                         l = $(this).closest("form"),
                         action = $(this).attr("action");
+                        alert(action)
                     l.ajaxSubmit({
                         url: action,
                         success: function(e, t, r, s) {
