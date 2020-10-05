@@ -53,6 +53,7 @@ var KTLogin = function() {
             e.preventDefault();
 
             validation.validate().then(function(status) {
+                alert(status);
 		        if (status == 'Valid') {
                     alert(1);
                     var a = $(this),
