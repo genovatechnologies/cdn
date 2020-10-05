@@ -114,6 +114,11 @@ var KTLogin = function() {
             _showForm('forgot');
         });
 
+        $('#kt_login_forgot_cancel').on('click', function (e) {
+            e.preventDefault();
+
+            _showForm('signin');
+        });
         // Handle signup
         $('#kt_login_signup').on('click', function (e) {
             e.preventDefault();
